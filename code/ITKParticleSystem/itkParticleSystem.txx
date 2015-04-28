@@ -48,7 +48,7 @@ ParticleSystem<VDimension>
 }
 
 template <unsigned int VDimension>
-void ParticleSystem<VDimension>::AddDomain( DomainType *input, int threadId)
+void ParticleSystem<VDimension>::AddDomain( DomainType *input, int numTotalDomains, int threadId)
 {
   this->Modified();
   
@@ -79,6 +79,7 @@ void ParticleSystem<VDimension>::AddDomain( DomainType *input, int threadId)
   e.SetDomainIndex(m_Domains.size() - 1);
   e.SetPositionIndex(0);
   e.SetThreadID(threadId);
+  e.SetNumTotalDomains(numTotalDomains);
   this->InvokeEvent(e);
 }
 
@@ -143,7 +144,7 @@ ParticleSystem<VDimension>::AddPosition( const PointType &p, unsigned int d, int
   m_Positions[d]->operator[](m_IndexCounters[d]) = p;
 
   // Potentially modifes position!
-  m_Domains[d]->ApplyConstraints( m_Positions[d]->operator[](m_IndexCounters[d]));
+  //m_Domains[d]->ApplyConstraints( m_Positions[d]->operator[](m_IndexCounters[d]));
 
   m_Neighborhoods[d]->AddPosition( m_Positions[d]->operator[](m_IndexCounters[d]),
                                    m_IndexCounters[d], threadId);
@@ -177,7 +178,7 @@ ParticleSystem<VDimension>::SetPosition(const PointType &p,  unsigned long int k
     m_Positions[d]->operator[](k) = p;
     
     // Potentially modifes position!
-    m_Domains[d]->ApplyConstraints( m_Positions[d]->operator[](k));
+//    m_Domains[d]->ApplyConstraints( m_Positions[d]->operator[](k));
     
     m_Neighborhoods[d]->SetPosition( m_Positions[d]->operator[](k), k,
                                      threadId);

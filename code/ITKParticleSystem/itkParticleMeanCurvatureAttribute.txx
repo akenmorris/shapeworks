@@ -23,6 +23,8 @@ void
 ParticleMeanCurvatureAttribute<TNumericType, VDimension>::
 ComputeCurvatureStatistics(const ParticleSystemType *system, unsigned int d)
 {
+
+//return;
   typedef ParticleImageDomainWithCurvature<TNumericType, VDimension> DomainType;
   typedef typename DomainType::ImageType ImageType;
 
@@ -57,7 +59,8 @@ ComputeCurvatureStatistics(const ParticleSystemType *system, unsigned int d)
       //      bool c = domain->GetConstraintsEnabled();
 
       //      domain->EnableConstraints();
-      domain->ApplyConstraints(pos);
+
+      //domain->ApplyConstraints(pos);
 
       //      domain->SetConstraintsEnabled(c);
       

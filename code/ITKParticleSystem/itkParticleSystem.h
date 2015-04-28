@@ -213,7 +213,7 @@ public:
       for a list of positions that are contained within the domain, and a
       default neighborhood calculator.  The final, optional argument indicates
       the calling thread id.*/
-  void AddDomain( DomainType *, int threadId =0);
+  void AddDomain( DomainType *, int numTotalDomains, int threadId =0);
   
   /** Return an iterator that points to the first element of the list of the
       domains. */

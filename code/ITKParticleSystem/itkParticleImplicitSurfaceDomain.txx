@@ -138,6 +138,9 @@ ParticleImplicitSurfaceDomain<T, VDimension>::ApplyConstraints(PointType &p) con
 
   if (this->m_ConstraintsEnabled == true)
     {
+
+//      std::cerr << "ParticleImplicitSurfaceDomain::ApplyConstraints\n";
+
   
     unsigned int k = 0;
     double mult = 1.0;

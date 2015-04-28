@@ -94,16 +94,22 @@ MaximumEntropySurfaceSampler<TImage>::AllocateDomainsAndNeighborhoods()
   // Allocate all the necessary domains and neighborhoods. This must be done
   // *after* registering the attributes to the particle system since some of
   // them respond to AddDomain.
+  // 
+
+
+  ParticleImplicitSurfaceDomain<typename ImageType::PixelType, Dimension>::Pointer domain = 
+    ParticleImplicitSurfaceDomain<typename ImageType::PixelType, Dimension>::New();
+
+  domain->SetSigma(m_WorkingImages[0]->GetSpacing()[0] * 2.0);
+  domain->SetImage(m_WorkingImages[0]);
+
+
   for (unsigned int i = 0; i < this->GetNumberOfInputs(); i++)
     { 
-    m_DomainList.push_back( ParticleImplicitSurfaceDomain<typename
-                            ImageType::PixelType, Dimension>::New() );
+    m_DomainList.push_back( domain );
     //    m_NeighborhoodList.push_back(ParticleRegionNeighborhood<Dimension>::New());
     m_NeighborhoodList.push_back( ParticleSurfaceNeighborhood<ImageType>::New() );
 
-    m_DomainList[i]->SetSigma(m_WorkingImages[i]->GetSpacing()[0] * 2.0);
-    
-    m_DomainList[i]->SetImage(m_WorkingImages[i]);
 
     if (m_CuttingPlanes.size() > i)
       {        
@@ -179,7 +185,7 @@ MaximumEntropySurfaceSampler<TImage>::AllocateDomainsAndNeighborhoods()
     
       // END TEST CUTTING PLANE
     
-    m_ParticleSystem->AddDomain(m_DomainList[i]);
+    m_ParticleSystem->AddDomain(m_DomainList[i], this->GetNumberOfInputs());
     m_ParticleSystem->SetNeighborhood(i, m_NeighborhoodList[i]);
     }
 }

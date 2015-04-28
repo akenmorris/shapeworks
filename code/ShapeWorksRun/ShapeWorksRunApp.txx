@@ -214,12 +214,16 @@ ShapeWorksRunApp<SAMPLERTYPE>::ReadInputs(const char *fname)
 
       numShapes = shapeFiles.size();
 
+      typename itk::ImageFileReader<ImageType>::Pointer reader = itk::ImageFileReader<ImageType>::New();
+      reader->SetFileName(shapeFiles[0].c_str());
+      reader->UpdateLargestPossibleRegion();
+
+
       for (int shapeCount = 0; shapeCount < numShapes; shapeCount++)
       {
-        typename itk::ImageFileReader<ImageType>::Pointer reader = itk::ImageFileReader<ImageType>::New();
-        reader->SetFileName(shapeFiles[shapeCount].c_str());
-        reader->UpdateLargestPossibleRegion();
+
         m_Sampler->SetInput(shapeCount, reader->GetOutput()); // set the ith input
+
 
         // Use the first loaded image to set some numerical constants
         if (shapeCount == 0)

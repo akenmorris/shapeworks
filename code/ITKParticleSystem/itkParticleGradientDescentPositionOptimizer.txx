@@ -17,7 +17,7 @@
 
 #ifdef SW_USE_OPENMP
 #include <omp.h>
-const int global_iteration = 10;
+const int global_iteration = 1;
 #else /* SW_USE_OPENMP */
 const int global_iteration = 1;
 #endif /* SW_USE_OPENMP */
@@ -43,6 +43,9 @@ void
 ParticleGradientDescentPositionOptimizer<TGradientNumericType, VDimension>
 ::StartAdaptiveGaussSeidelOptimization()
 {
+
+  std::cerr << "************** StartAdaptiveGaussSeidel!\n";
+
   const double factor = 1.1;//1.1;
   //  const double epsilon = 1.0e-4;
 
@@ -99,6 +102,7 @@ ParticleGradientDescentPositionOptimizer<TGradientNumericType, VDimension>
       {
         std::cerr << "Performing global step\n";
         m_GradientFunction->BeforeIteration();
+        std::cerr << "After performing global step\n";
       }
       counter++;
 
@@ -124,6 +128,7 @@ ParticleGradientDescentPositionOptimizer<TGradientNumericType, VDimension>
       // skip any flagged domains
       if (m_ParticleSystem->GetDomainFlag(dom) == false)
         {
+          std::cerr << "dom: " << dom << "\n";
           double maxdt;
 
           VectorType gradient;
@@ -143,6 +148,7 @@ ParticleGradientDescentPositionOptimizer<TGradientNumericType, VDimension>
         localGradientFunction->SetDomainNumber(dom);
      
         // Iterate over each particle position
+        int p_counter = 0;
         unsigned int k = 0;
         maxchange = 0.0;
         typename ParticleSystemType::PointContainerType::ConstIterator endit =
@@ -151,6 +157,7 @@ ParticleGradientDescentPositionOptimizer<TGradientNumericType, VDimension>
                = m_ParticleSystem->GetPositions(dom)->GetBegin(); it != endit; it++, k++)
           {
           bool done = false;
+          std::cerr << "#";
 
           // Compute gradient update.
           double energy = 0.0;
@@ -219,6 +226,10 @@ ParticleGradientDescentPositionOptimizer<TGradientNumericType, VDimension>
         //        std::cout << "meantime = " << meantime[dom] << std::endl;
         maxtime[dom] = meantime[dom] + meantime[dom] * 0.2;
         mintime[dom] = meantime[dom] - meantime[dom] * 0.1;
+
+
+        std::cerr << "dom done: " << dom << "\n";
+
         } // if not flagged
       }// for each domain
     
@@ -248,6 +259,10 @@ void
 ParticleGradientDescentPositionOptimizer<TGradientNumericType, VDimension>
 ::StartGaussSeidelOptimization()
 {
+
+
+  std::cerr << "************** StartGaussSeidel!\n";
+
   // NOTE: THIS METHOD WILL NOT WORK AS WRITTEN IF PARTICLES ARE
   // ADDED TO THE SYSTEM DURING OPTIMIZATION.
   m_StopOptimization = false;
@@ -325,6 +340,9 @@ void
 ParticleGradientDescentPositionOptimizer<TGradientNumericType, VDimension>
 ::StartJacobiOptimization()
 {
+
+  std::cerr << "************** StartJacobi!\n";
+
   // NOTE: THIS METHOD WILL NOT WORK AS WRITTEN IF PARTICLES ARE
   // ADDED TO THE SYSTEM DURING OPTIMIZATION.
   m_StopOptimization = false;

@@ -97,9 +97,21 @@ public:
   int GetDomainIndex() const
   { return m_DomainIndex; }
 
+  inline void SetNumTotalDomains(int i)
+  {
+    m_NumTotalDomains = i;
+  }
+
+  int GetNumTotalDomains() const
+  {
+    return m_NumTotalDomains;
+  }
+
+
 private:
   int m_PositionIndex;
   int m_DomainIndex;
+  int m_NumTotalDomains;
   
 };
 
