@@ -152,11 +152,11 @@ plane_widget_pipeline::plane_widget_pipeline()
   vtkTransform *tmp = vtkTransform::New();
   tmp->Identity();
   m_transformer->SetTransform(tmp);
-  m_transformer->SetInput(m_plane_source->GetOutput());
+  m_transformer->SetInputData(m_plane_source->GetOutput());
   
   m_mapper = vtkPolyDataMapper::New();
   
-  m_mapper->SetInput(m_transformer->GetOutput());
+  m_mapper->SetInputData(m_transformer->GetOutput());
   // m_mapper->StaticOn();
   // m_mapper->ImmediateModeRenderingOff();
   m_mapper->ScalarVisibilityOff();

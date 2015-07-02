@@ -21,7 +21,7 @@ void isosurface_pipeline::write_vtk_mesh(const char *fn)
   vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
   std::string fnstr = std::string(fn) + ".vtk";
   writer->SetFileName(fnstr.c_str());
-  writer->SetInput(m_transformer->GetOutput());
+  writer->SetInputData(m_transformer->GetOutput());
   writer->Write();
 }
 
@@ -175,11 +175,11 @@ isosurface_pipeline::isosurface_pipeline()
   vtkTransform *tmp = vtkTransform::New();
   tmp->Identity();
   m_transformer->SetTransform(tmp);
-  m_transformer->SetInput(m_contour_filter->GetOutput());
+  m_transformer->SetInputData(m_contour_filter->GetOutput());
   
   m_mapper = vtkPolyDataMapper::New();
   
-  m_mapper->SetInput(m_transformer->GetOutput());
+  m_mapper->SetInputData(m_transformer->GetOutput());
   //  m_mapper->StaticOn();
   //m_mapper->ImmediateModeRenderingOff();
   m_mapper->ScalarVisibilityOff();

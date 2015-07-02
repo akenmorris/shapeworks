@@ -221,11 +221,11 @@ glyph_pipeline::glyph_pipeline()
   tmp->Identity();
 
   m_transformer->SetTransform(tmp);
-  m_transformer->SetInput(m_pointset);
+  m_transformer->SetInputData(m_pointset);
   
-  m_glyphs->SetSource(m_sphere->GetOutput());
+  m_glyphs->SetSourceData(m_sphere->GetOutput());
   //m_glyphs->SetSource(m_disk->GetOutput());
-  m_glyphs->SetInput(m_transformer->GetOutput());
+  m_glyphs->SetInputData(m_transformer->GetOutput());
   m_glyphs->ScalingOn();
   m_glyphs->ClampingOff();
   m_glyphs->SetColorModeToColorByScalar();
