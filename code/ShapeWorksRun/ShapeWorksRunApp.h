@@ -103,6 +103,18 @@ class ShapeWorksRunApp
 	}
   }
 
+
+  /**Optionally provide a filename for an output point set.*/
+  void SetOutputPointsFile(unsigned int i, const std::string &s)
+  {
+    if (m_output_points_files.size() < i+1)
+      {
+      m_output_points_files.resize(i+1);
+      }
+    m_output_points_files[i] = s;
+  }
+
+
   // "iter" param used if "keep_checkpoints" param is set to 1.
   virtual void WritePointFiles( int iter = -1 );  
   virtual void WriteTransformFile( int iter = -1 ) const;
@@ -140,6 +152,7 @@ protected:
   int m_processing_mode;
   int m_procrustes_scaling; 
   std::string m_output_points_prefix;
+  std::vector<std::string> m_output_points_files;
   std::string m_output_transform_file;
   unsigned int m_number_of_particles;
   double m_starting_regularization;

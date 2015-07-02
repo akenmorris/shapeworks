@@ -232,33 +232,64 @@ ShapeWorksRunApp<SAMPLERTYPE>::ReadInputs(const char *fname)
     }
 
     // load point files
-    std::vector<std::string> pointFiles;
-    elem = docHandle.FirstChild( "point_files" ).Element();
-    if (elem)
-    {
-      inputsBuffer.str(elem->GetText());
-      while (inputsBuffer >> filename)
-      {
-        pointFiles.push_back(filename);
-      }
-      inputsBuffer.clear();
-      inputsBuffer.str("");
+       std::vector<std::string> pointFiles;
+       elem = docHandle.FirstChild( "point_files" ).Element();
+       if (elem)
+       {
+         inputsBuffer.str(elem->GetText());
+         while (inputsBuffer >> filename)
+         {
+           pointFiles.push_back(filename);
+         }
+         inputsBuffer.clear();
+         inputsBuffer.str("");
 
-      // read point files only if they are all present
-      if (pointFiles.size() < numShapes)
-      {
-        std::cerr << "not enough point files, none will be loaded" << std::endl;
-      }
-      else
-      {
-        for (int shapeCount = 0; shapeCount < numShapes; shapeCount++)
-        {
-          m_Sampler->SetPointsFile(shapeCount, pointFiles[shapeCount]);
-        }
-      }
+         // read point files only if they are all present
+         if (pointFiles.size() < numShapes)
+         {
+           std::cerr << "not enough point files, none will be loaded" << std::endl;
+         }
+         else
+         {
+           for (int shapeCount = 0; shapeCount < numShapes; shapeCount++)
+           {
+             m_Sampler->SetPointsFile(shapeCount, pointFiles[shapeCount]);
+           }
+         }
 
-      pointFiles.clear();
-    }   
+         pointFiles.clear();
+       }
+
+
+       // output point files
+       // load point files
+          std::vector<std::string> output_point_files;
+          elem = docHandle.FirstChild( "output_point_files" ).Element();
+          if (elem)
+          {
+            inputsBuffer.str(elem->GetText());
+            while (inputsBuffer >> filename)
+            {
+              output_point_files.push_back(filename);
+            }
+            inputsBuffer.clear();
+            inputsBuffer.str("");
+
+            // read point files only if they are all present
+            if (output_point_files.size() < numShapes)
+            {
+              std::cerr << "not enough out point files specified" << std::endl;
+            }
+            else
+            {
+              for (int shapeCount = 0; shapeCount < numShapes; shapeCount++)
+              {
+                this->SetOutputPointsFile(shapeCount, output_point_files[shapeCount]);
+              }
+            }
+
+            output_point_files.clear();
+          }
 
 
 #ifdef SW_USE_MESH
@@ -633,6 +664,13 @@ ShapeWorksRunApp<SAMPLERTYPE>::WritePointFiles( int iter )
     //std::string local_file = iter >= 0 ? "./.iter" + ss.str() + "/" + fn.filename(i) : fn.filename(i) + "." + points_ss.str();
     //std::string world_file = iter >= 0 ? "./.iter" + ss.str() + "/" + fnw.filename(i) : fnw.filename(i) + "." + points_ss.str();
     
+
+    if (this->m_output_points_files.size() == n)
+    {
+      local_file = this->m_output_points_files[i] + ".lpts";
+      world_file = this->m_output_points_files[i] + ".wpts";
+    }
+
     std::ofstream out( local_file.c_str() );
     std::ofstream outw( world_file.c_str() );
 
