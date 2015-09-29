@@ -150,7 +150,7 @@ ShapeWorksView2::ShapeWorksView2( int argc, char** argv )
   this->scalar_bar_actor_->GetLabelTextProperty()->SetFontSize( 10 );
   this->scalar_bar_actor_->GetLabelTextProperty()->SetJustificationToCentered();
   //this->scalar_bar_actor_->GetLabelTextProperty()->SetColor( 0, 0, 0 );
-  this->renderer->AddActor( this->scalar_bar_actor_ );
+  //  this->renderer->AddActor( this->scalar_bar_actor_ );
 }
 
 //---------------------------------------------------------------------------

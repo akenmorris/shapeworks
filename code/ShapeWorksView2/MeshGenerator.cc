@@ -17,6 +17,7 @@
 #include <vtkDecimatePro.h>
 #include <vtkButterflySubdivisionFilter.h>
 #include <vtkPolyDataToImageData.h>
+#include <vtkMetaImageWriter.h>
 
 #include <vtkMetaImageWriter.h>
 #include <vtkPolyDataWriter.h>
@@ -45,7 +46,7 @@ MeshGenerator::MeshGenerator()
   this->polydataToImageData = vtkSmartPointer<vtkPolyDataToImageData>::New();
   this->triangleFilter = vtkSmartPointer<vtkTriangleFilter>::New();
   this->powercrust = vtkSmartPointer<vtkPowerCrustSurfaceReconstruction>::New();
-  this->powercrust->SetInput( this->pointSet );
+  this->powercrust->SetInputData( this->pointSet );
   this->triangleFilter->SetInputConnection( this->powercrust->GetOutputPort() );
   this->polydataToImageData->SetInputConnection( this->triangleFilter->GetOutputPort() );
 #endif // ifdef SW_USE_POWERCRUST
@@ -121,7 +122,23 @@ vtkSmartPointer<vtkPolyData> MeshGenerator::buildMesh( const vnl_vector<double>&
   {
     if ( this->smoothingEnabled )
     {
+      this->powercrust->Update();
+      this->triangleFilter->Update();
       this->polydataToImageData->Update();
+
+/*
+      vtkSmartPointer<vtkMetaImageWriter> writer =
+         vtkSmartPointer<vtkMetaImageWriter>::New();
+       writer->SetFileName("SphereVolume.mhd");
+     #if VTK_MAJOR_VERSION <= 5
+       writer->SetInput(imgstenc->GetOutput());
+     #else
+       writer->SetInputConnection(this->polydataToImageData->GetOutputPort());
+     #endif
+       writer->Write();
+*/
+
+
       this->contourFilter->Update();
     }
   }
