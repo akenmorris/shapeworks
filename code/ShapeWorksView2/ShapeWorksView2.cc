@@ -135,6 +135,8 @@ ShapeWorksView2::ShapeWorksView2( int argc, char** argv )
 
   this->scalar_bar_actor_ = vtkSmartPointer<vtkScalarBarActor>::New();
   this->scalar_bar_actor_->SetTitle( "" );
+  this->differenceLUT = vtkSmartPointer<vtkColorTransferFunction>::New();
+
   this->scalar_bar_actor_->SetLookupTable( this->differenceLUT );
   this->scalar_bar_actor_->SetOrientationToHorizontal();
   this->scalar_bar_actor_->SetMaximumNumberOfColors( 1000 );
@@ -150,7 +152,6 @@ ShapeWorksView2::ShapeWorksView2( int argc, char** argv )
   this->scalar_bar_actor_->GetLabelTextProperty()->SetFontSize( 10 );
   this->scalar_bar_actor_->GetLabelTextProperty()->SetJustificationToCentered();
   //this->scalar_bar_actor_->GetLabelTextProperty()->SetColor( 0, 0, 0 );
-  //  this->renderer->AddActor( this->scalar_bar_actor_ );
 }
 
 //---------------------------------------------------------------------------
@@ -486,6 +487,7 @@ void ShapeWorksView2::on_actionLoadScalars_triggered()
                       + QString::number( this->scalars.size() ) + " != " + QString::number( ( this->numPoints ) ) + ")";
     QMessageBox::critical( this, "Number of points mismatch", message );
   }
+
 }
 
 //---------------------------------------------------------------------------
@@ -1610,6 +1612,9 @@ void ShapeWorksView2::displayScalars()
     this->surfaceMappers[i]->SetColorModeToMapScalars();
     this->surfaceMappers[i]->ScalarVisibilityOn();
   }
+
+  this->renderer->AddActor( this->scalar_bar_actor_ );
+
 }
 
 //---------------------------------------------------------------------------
