@@ -288,6 +288,8 @@ void ShapeWorksView2::on_actionExportSurfaceMesh_triggered()
     {
       appendPolyData->AddInputData( this->surfaceMappers[i]->GetInput() );
     }
+    appendPolyData->Update();
+    std::cerr << "About to write!\n";
 
     QFileInfo fi( filename );
     if ( fi.suffix() == "stl" )
@@ -1540,6 +1542,9 @@ void ShapeWorksView2::displayScalars()
     }
     magnitudes->InsertNextTuple1( this->scalars[i] );
   }
+
+  //max_value = 19.0/26.0 * 100;
+  //max_value = 50;
 
   vtkSmartPointer<vtkPolyData> pointData = vtkSmartPointer<vtkPolyData>::New();
   pointData->SetPoints( this->glyphPoints );
