@@ -62,6 +62,7 @@ public Q_SLOTS:
   void on_actionExportPcaLoadings_triggered();
   void on_actionExportPoints_triggered();
   void on_actionExportSurfaceMesh_triggered();
+  void on_actionImportSurfaceMesh_triggered();
   void on_actionExportVarianceReport_triggered();
   void on_actionExportEigenvectors_triggered();
 
@@ -187,6 +188,9 @@ private:
   //vtkSmartPointer<vtkColorTransferFunction>   pValueTFunc;
   //vtkSmartPointer<vtkPolyDataNormals>         m_surfNormals;
   //vtkSmartPointer<vtkDecimatePro>             m_surfDecimate;
+
+
+  vtkSmartPointer<vtkPolyData> surfaceOverride;
 
   ParticleShapeStatistics<3> stats;
   itk::ParticleShapeLinearRegressionMatrixAttribute<double, 3>::Pointer regression;

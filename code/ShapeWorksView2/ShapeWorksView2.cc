@@ -36,6 +36,7 @@
 #include <vtkPLYReader.h>
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
+#include <vtkPolyDataNormals.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkRenderWindow.h>
@@ -46,6 +47,7 @@
 #include <vtkUnsignedLongArray.h>
 #include <vtkPointLocator.h>
 #include <vtkPolyDataWriter.h>
+#include <vtkPolyDataReader.h>
 #include <vtkSTLWriter.h>
 #include <vtkScalarBarActor.h>
 #include <vtkTextProperty.h>
@@ -158,10 +160,8 @@ ShapeWorksView2::ShapeWorksView2( int argc, char** argv )
 ShapeWorksView2::~ShapeWorksView2()
 {}
 
-
-
 //---------------------------------------------------------------------------
-void ShapeWorksView2::write_stats_file(QString filename)
+void ShapeWorksView2::write_stats_file( QString filename )
 {
   this->stats.WriteCSVFile2( filename.toStdString() );
 }
@@ -187,8 +187,7 @@ void ShapeWorksView2::on_actionExportPcaLoadings_triggered()
                                                    QString(), "CSV files (*.csv)" );
   if ( filename.isEmpty() ) {return; }
 
-
-  this->write_stats_file(filename);
+  this->write_stats_file( filename );
 
   // write out eigenvectors
   /*
@@ -234,6 +233,25 @@ void ShapeWorksView2::on_actionExportPoints_triggered()
   writer->SetFileName( filename.toStdString() );
   writer->SetInput( plist );
   writer->Write();
+}
+
+//---------------------------------------------------------------------------
+void ShapeWorksView2::on_actionImportSurfaceMesh_triggered()
+{
+  QString filename = QFileDialog::getOpenFileName( this, "Import Surface Mesh... ",
+                                                   QString(), "VTK files (*.vtk)" );
+  if ( filename.isEmpty() ) {return; }
+
+  vtkSmartPointer<vtkPolyDataReader> surfaceReader = vtkSmartPointer<vtkPolyDataReader>::New();
+  //surfaceReader->SetInputData( this->surfaceMappers[i]->GetInput() );
+  surfaceReader->SetFileName( filename.toStdString().c_str() );
+  surfaceReader->Update();
+  //this->surfaceOverride = surfaceReader->GetOutput();
+
+  vtkSmartPointer<vtkPolyDataNormals> normals = vtkSmartPointer<vtkPolyDataNormals>::New();
+  normals->SetInputConnection( surfaceReader->GetOutputPort() );
+  normals->Update();
+  this->surfaceOverride = normals->GetOutput();
 }
 
 //---------------------------------------------------------------------------
@@ -489,7 +507,6 @@ void ShapeWorksView2::on_actionLoadScalars_triggered()
                       + QString::number( this->scalars.size() ) + " != " + QString::number( ( this->numPoints ) ) + ")";
     QMessageBox::critical( this, "Number of points mismatch", message );
   }
-
 }
 
 //---------------------------------------------------------------------------
@@ -1301,6 +1318,11 @@ void ShapeWorksView2::displayShape( const vnl_vector<double> &shape )
       vtkSmartPointer<vtkPolyData> polyData = this->meshManager.getMesh( this->getDomainShape( shape, i ) );
 
       // retrieve the mesh and set it for display
+
+      if ( this->surfaceOverride )
+      {
+        polyData = this->surfaceOverride;
+      }
       this->surfaceMappers[i]->SetInputData( polyData );
     }
   }
@@ -1545,6 +1567,7 @@ void ShapeWorksView2::displayScalars()
 
   //max_value = 19.0/26.0 * 100;
   //max_value = 50;
+  max_value = 70;
 
   vtkSmartPointer<vtkPolyData> pointData = vtkSmartPointer<vtkPolyData>::New();
   pointData->SetPoints( this->glyphPoints );
@@ -1619,7 +1642,6 @@ void ShapeWorksView2::displayScalars()
   }
 
   this->renderer->AddActor( this->scalar_bar_actor_ );
-
 }
 
 //---------------------------------------------------------------------------
